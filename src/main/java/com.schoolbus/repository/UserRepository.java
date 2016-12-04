@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserRepository extends JpaRepository<User,Long> {
 
     User findByName(String name);
-    User findByPhoneNumber(String phoneNumber);
+
 
     @Modifying
     @Transactional

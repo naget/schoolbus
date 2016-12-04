@@ -24,8 +24,8 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
-    private String phoneNumber;
+    private String name;//手机号
+    private String lName;
     private String pwd;
 
     private Integer status;

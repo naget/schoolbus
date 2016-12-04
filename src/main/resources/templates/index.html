@@ -9,6 +9,23 @@
 </head>
 <body>
 <a href="/hello">打个招呼吧</a>
+<form action="/create">
+    telephone:<input type="text" name="name"/>
+    password:<input type="text" name="password"/>
+    <input type="text" name="code"/>
+    <img src="/code" align="middle" title="看不清 请点我"
+         onclick="refresh(this)" onmouseover="mouseover()"/>
+    <input type="submit" value="Submit"/>
 
+</form>
+<script>
+    function refresh(obj){
+        obj.src = "/code?" + Math.random();
+    }
+
+    function mouseover(obj){
+        obj.style.cursor = "pointer";
+    }
+</script>
 </body>
 </html>

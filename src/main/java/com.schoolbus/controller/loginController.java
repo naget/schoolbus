@@ -5,6 +5,7 @@ import com.schoolbus.model.User;
 import com.schoolbus.repository.RoleRepository;
 import com.schoolbus.repository.UserRepository;
 import com.schoolbus.service.UserService;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,6 @@ import java.util.List;
  * Created by t on 2016/11/23.
  */
 @Controller
-@RequestMapping("/")
 public class loginController {
     @Autowired
     UserRepository userRepository;
@@ -32,27 +33,35 @@ public class loginController {
     RoleRepository roleRepository;
     @RequestMapping("/create")//注册
     @ResponseBody
-    public String UserSign(@RequestParam("phoneNumber")String phoneNumber,
-                           @RequestParam("pwd")String pwd,
-                           @RequestParam("name") String name)
-    {
-        if (!StringUtils.isEmpty(userRepository.findByPhoneNumber(phoneNumber)))
-            return phoneNumber+"已经被注册";
-        else
-        {
-            User user=new User();
-            Role role = roleRepository.findByName("USER");
-            role.setName("USER");
-            List<Role> roles=new ArrayList<>();
-            roles.add(role);
-            user.setRoles(roles);
-            user.setName(name);
-            user.setPwd(pwd);
-            user.setPhoneNumber(phoneNumber);
-            user.setStatus(0);
+    public String UserSign(@RequestParam("name")String name,
+                           @RequestParam("password")String pwd,
 
-            userService.save(user);
-            return phoneNumber+"注册成功！来不及解释，赶快上车吧！";
+                            @RequestParam("code") String code,HttpServletRequest request)
+    {
+        HttpSession session = request.getSession();
+        String servercode=session.getAttribute("validateCode").toString();
+        System.out.println(servercode);
+        System.out.println(code);
+        if (!(servercode.equals(code)))return "验证码不正确";
+        else {
+            if (!StringUtils.isEmpty(userRepository.findByName(name)))
+                return name + "已经被注册";
+            else {
+                System.out.println();
+                User user = new User();
+                Role role = roleRepository.findByName("USER");
+                role.setName("USER");
+                List<Role> roles = new ArrayList<>();
+                roles.add(role);
+                user.setRoles(roles);
+
+                user.setPwd(pwd);
+                user.setName(name);
+                user.setStatus(0);
+
+                userService.save(user);
+                return name + "注册成功！来不及解释，赶快上车吧！";
+            }
         }
     }
 
@@ -65,12 +74,12 @@ public class loginController {
     public String login (@RequestParam("phoneNumber") String phoneNumber,
                         @RequestParam("pwd") String pwd) throws Exception
     {
-        if(userRepository.findByPhoneNumber(phoneNumber)==null)
+        if(userRepository.findByName(phoneNumber)==null)
         {
             return "请注册信息之后再上车！";
         }
         else {
-            User user = userRepository.findByPhoneNumber(phoneNumber);
+            User user = userRepository.findByName(phoneNumber);
             if(passwordEncoder.matches(pwd,user.getPwd()))
             {
                 userRepository.setStatus1(user);
@@ -85,7 +94,7 @@ public class loginController {
     @ResponseBody
     public String logout(String phoneNumber)
     {
-        User user = userRepository.findByPhoneNumber(phoneNumber);
+        User user = userRepository.findByName(phoneNumber);
 
         if (user.getStatus()==1)
         {
@@ -101,6 +110,6 @@ public class loginController {
 
     public String Text()
     {
-        return "ad";
+        return "index";
     }
 }
