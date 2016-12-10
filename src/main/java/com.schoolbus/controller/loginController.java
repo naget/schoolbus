@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -22,6 +23,7 @@ import java.util.List;
  * Created by t on 2016/11/23.
  */
 @Controller
+@RequestMapping("/")
 public class loginController {
     @Autowired
     UserRepository userRepository;
@@ -31,9 +33,9 @@ public class loginController {
     PasswordEncoder passwordEncoder;
     @Autowired
     RoleRepository roleRepository;
-    @RequestMapping("/create")//注册
+    @RequestMapping(value = "/create",method = RequestMethod.POST)//注册
     @ResponseBody
-    public String UserSign(@RequestParam("name")String name,
+    public String UserSign(@RequestParam("username")String name,
                            @RequestParam("password")String pwd,
 
                             @RequestParam("code") String code,HttpServletRequest request)
@@ -55,7 +57,7 @@ public class loginController {
                 roles.add(role);
                 user.setRoles(roles);
 
-                user.setPwd(pwd);
+                user.setPassword(pwd);
                 user.setName(name);
                 user.setStatus(0);
 
@@ -69,32 +71,35 @@ public class loginController {
 
 
 
-    @RequestMapping("/login")
+//    @RequestMapping(value = "/login" )
+//    @ResponseBody
+//    public String login (@RequestParam(value = "name",required = false
+//    ) String username,
+//                        @RequestParam(value = "password",required = false) String ) throws Exception
+//    {
+////        if(userRepository.findByName(username)==null)
+////        {
+////            System.out.println("username的值是"+username);
+////            return "请注册信息之后再上车！";
+////        }
+////        else {
+//
+//           User user = userRepository.findByName(username);
+//            if(passwordEncoder.matches(pwd,user.getPwd()))
+//            {
+//                userRepository.setStatus1(user);
+//                return "登陆成功";
+//            }
+//            else {
+//                return "密码错误！";
+//            }
+////        }
+//    }
+    @RequestMapping(value = "/logout",method = RequestMethod.POST)
     @ResponseBody
-    public String login (@RequestParam("phoneNumber") String phoneNumber,
-                        @RequestParam("pwd") String pwd) throws Exception
+    public String logout(String name)
     {
-        if(userRepository.findByName(phoneNumber)==null)
-        {
-            return "请注册信息之后再上车！";
-        }
-        else {
-            User user = userRepository.findByName(phoneNumber);
-            if(passwordEncoder.matches(pwd,user.getPwd()))
-            {
-                userRepository.setStatus1(user);
-                return "登陆成功";
-            }
-            else {
-                return "密码错误！";
-            }
-        }
-    }
-    @RequestMapping("/logout")
-    @ResponseBody
-    public String logout(String phoneNumber)
-    {
-        User user = userRepository.findByName(phoneNumber);
+        User user = userRepository.findByName(name);
 
         if (user.getStatus()==1)
         {
@@ -106,10 +111,28 @@ public class loginController {
         else return "您还未登录";
 
     }
-    @RequestMapping("")
+    @RequestMapping(value = "/login")
 
-    public String Text()
+    public String login()
+    {
+        return "login";
+    }
+
+    @RequestMapping("/index")
+
+    public String index()
     {
         return "index";
+    }
+    @RequestMapping("/hello")
+
+    public String error()
+    {
+        return "hello";
+    }
+    @RequestMapping("/create")
+    public String create()
+    {
+        return "create";
     }
 }

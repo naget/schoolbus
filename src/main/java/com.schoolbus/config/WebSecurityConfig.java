@@ -28,30 +28,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
     {
-        auth.userDetailsService(customUserService()).passwordEncoder(new BCryptPasswordEncoder());
-//        auth.authenticationProvider(authenticationProvider());
+        auth.userDetailsService(customUserService());
+        auth.userDetailsService(customUserService()).passwordEncoder(passwordEncoder());
+
+        auth.eraseCredentials(false);//不删除凭据，以便记住用户
     }
-//    @Bean
-//    public DaoAuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setUserDetailsService(customUserService());
-//        authenticationProvider.setPasswordEncoder(passwordEncoder());
-//        return authenticationProvider;
+
+//    private CsrfTokenRepository csrfTokenRepository()
+//    {
+//        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+//        repository.setSessionAttributeName("_csrf");
+//        return repository;
 //    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
-//        http.authorizeRequests()
-//                .antMatchers("/","/home").permitAll()
-//                .anyRequest().authenticated()//所有请求需要认证登录后才能访问
-//                .and()
-//                .formLogin()
-//                .loginPage("/login")
-//                .failureUrl("/login?error")
-//                .permitAll()
-//                .and()
-//                .logout().permitAll();
-
+        http.authorizeRequests()
+                .antMatchers("/code","/create","/**/*.html","/*.css","/**/*.css","/**/*.jpg","/**/*.png").permitAll()
+                .anyRequest().authenticated()//所有请求需要认证登录后才能访问
+                .and()
+                .formLogin()
+                .loginPage("/login").defaultSuccessUrl("/index",true)
+                .failureUrl("/login")
+                .permitAll()
+                .and()
+                .logout().permitAll()
+                .and().csrf().disable();
+//        http.csrf()
+//                .csrfTokenRepository(csrfTokenRepository());
 
 
     }

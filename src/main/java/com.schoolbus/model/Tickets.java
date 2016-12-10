@@ -20,12 +20,12 @@ public class Tickets {
     Long id;
     @DateTimeFormat(pattern = "yyyy-MM-dd-HH-MM")
     Timestamp start;
-    String line;
+    int type;
     Integer totleTickets;
     Integer soldTickets;
     Integer leftTickets;
     Integer isLeave;
-    Integer isToday;
+
 
 
 

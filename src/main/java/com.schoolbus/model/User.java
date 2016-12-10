@@ -26,7 +26,7 @@ public class User implements UserDetails {
 
     private String name;//手机号
     private String lName;
-    private String pwd;
+    private String password;
 
     private Integer status;
     private Timestamp birthday;
@@ -37,10 +37,10 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Role> roles=new ArrayList<Role>();
     @ManyToMany()
-    @JoinTable(name = "user_tickets",joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "tickets_id"))
+    @JoinTable(name = "user_tickets_paper",joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "tickets_paper_id"))
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Tickets> ticketses= new ArrayList<Tickets>();
+    private List<TicketsPaper> ticketsPapers= new ArrayList<TicketsPaper>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -55,7 +55,7 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return pwd;
+        return password;
     }
 
     @Override
@@ -65,21 +65,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

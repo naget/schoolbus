@@ -18,8 +18,13 @@ public class CustomUserService implements UserDetailsService {
     UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user=userRepository.findByName(s);
+    public UserDetails loadUserByUsername(String name) {
+        System.out.println("开始查询用户"+name);
+        User user=userRepository.findByName(name);
+        System.out.println(user);
+        if (user==null) {
+            throw new UsernameNotFoundException("用户不存在");
+        }
         return user;
     }
 
