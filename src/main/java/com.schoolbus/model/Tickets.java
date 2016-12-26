@@ -25,7 +25,7 @@ public class Tickets {
     Integer soldTickets;
     Integer leftTickets;
     Integer isLeave;
-
+    double price;
 
 
 

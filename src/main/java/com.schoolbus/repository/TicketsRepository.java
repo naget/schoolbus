@@ -14,8 +14,9 @@ public interface TicketsRepository extends JpaRepository<Tickets,Long>{
 //    @Query("select t from Tickets t where t.time=?1")
 //    List<Tickets> findBytime(String time);
 
-    @Query("select t from Tickets t where t.start>=?1 and t.start<=?2")
+    @Query("select t from Tickets t where t.start>=?1 and t.start<=?2 order by t.id asc ")
     List<Tickets> findBytime(Timestamp timestamp,Timestamp timestamp2);
     @Query("select t from  Tickets t where t.start=?1")
     Tickets findByStart(Timestamp timestamp);
+    Tickets findById(Long id);
 }

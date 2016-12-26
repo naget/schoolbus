@@ -30,6 +30,8 @@ public class User implements UserDetails {
 
     private Integer status;
     private Timestamp birthday;
+    @Transient
+    private String code;
     @ManyToMany()
     @JoinTable(name = "user_role",joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns =@JoinColumn(name = "role_id") )

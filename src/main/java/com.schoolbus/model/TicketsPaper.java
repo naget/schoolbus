@@ -20,5 +20,6 @@ public class TicketsPaper {
     private int type;
     private Timestamp buyTime;
     private double price;
+    private String userName;
 
 }

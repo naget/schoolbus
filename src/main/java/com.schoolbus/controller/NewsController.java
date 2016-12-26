@@ -1,6 +1,8 @@
 package com.schoolbus.controller;
 
+import com.schoolbus.config.GlobleCounts;
 import com.schoolbus.model.Ad;
+import com.schoolbus.model.Tdata;
 import com.schoolbus.repository.AdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,18 +20,18 @@ public class NewsController {
     @Autowired
     AdRepository adRepository;
     @RequestMapping("/fromAdmin")
-    @ResponseBody
-    public void receiveNews(@RequestParam String content)
+//    @ResponseBody
+    public String receiveNews(@RequestParam String content)
     {
         Ad ad=new Ad(content);
         adRepository.save(ad);
-
+        return "redirect:/index";
     }
     @RequestMapping(value = "/toUser",method = RequestMethod.GET)
     @ResponseBody
-    public Ad sendToUsers()
+    public Tdata<Ad> sendToUsers()
     {
         Ad ad=adRepository.findAll().get(0);
-        return ad;
+        return new Tdata<>(GlobleCounts.WORK_SUCCEED,ad);
     }
 }

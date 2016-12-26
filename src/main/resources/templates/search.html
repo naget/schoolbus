@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html ng-app="ticketsApp">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>车次查询</title>
+  	<link rel="stylesheet" href="css/search.css" />
+  	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<!--<script src="http://libs.baidu.com/jquery/1.9.1/jquery.js" type="text/javascript"></script>-->
+	<script src="//cdn.bootcss.com/angular.js/1.5.5/angular.js"></script>
+
+	<!--<script src="ticketsCtrl.js"></script>-->
+  	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+  	<script>
+		$( function() {
+		  $( "#datepicker" ).datepicker();
+		} );
+	</script>
+	<script>
+		var app=angular.module("ticketsApp",[])
+		app.controller("ticketsCtrl",function ($http, $scope) {
+			$scope.sale=function (xid) {
+				var id=xid;
+				var number=1;
+				$http({
+					method:"post",
+					url:"/info/sale",
+					data:{id:id,number:number}
+				}).success(function (message) {
+					$scope.message=message;
+					alert(message);
+					$scope.search();
+				})
+
+			}
+			$scope.search=function () {
+				var time=$( "#datepicker" ).val();
+				var time2=(new Date(time).getTime());
+
+				$http({
+					method:"post",
+					url:"/info/showSpecialInfo",
+					data:{time:time2}
+				}).success(function (message) {
+					$scope.message=message;
+					$scope.selectedtime=time2;
+				});
+			}
+
+
+
+		})
+	</script>
+</head>
+
+<body>
+    <div class="container">
+
+        <!--start .footer-->
+
+        <div class="header">
+            <h1><span>ExperiencedDrivers</span>老司机校车服务系统</h1>
+            <h3>同学，买票上车啊</h3>
+            <ul>
+                <li><a href="/index">当前车次</a></li>
+                <li><a href="#">车次查询</a></li>
+            </ul>
+        </div>
+
+        <!--end .footer-->
+        <!--start .main-->
+
+        <div class="main" ng-controller="ticketsCtrl">
+        	
+        	<div class="date">
+        		<p>
+        			选择日期：<input type="text" id="datepicker"/>
+        			<button class="btn" ng-click="search()">查&nbsp;&nbsp;询</button>
+        		</p>
+        	</div>
+			<div class="main-search" ng-model="selectedtime">
+				<h3>{{selectedtime|date:"MM月dd日"}}车次有</h3>
+				<ul class="main-search-list">
+					<li ng-repeat="x in message.message">
+						<span>{{x.start|date:"HH:mm"}}</span>
+						<span>新都-天府广场</span>
+						<span>代售{{x.leftTickets}}张</span>
+					<button class="btn" ng-click="sale(x.id)">买票上车</button>
+					</li>
+				</ul>
+			</div>
+			<div class="main-search">
+				<h3>当日车次</h3>
+				<ul class="main-search-list">
+					<li>
+						<span>7:30</span>
+						<span>新都-天府广场</span>
+						<span>待售10张</span>
+						<span><button class="btn">买票上车</button></span>
+					</li>
+				</ul>
+			</div>
+
+			<div class="main-search">
+				<h3>明日车次</h3>
+				<ul class="main-search-list">
+					<li>
+						<span>7:30</span>
+						<span>新都-天府广场</span>
+						<span>待售10张</span>
+						<span><button class="btn">买票上车</button></span>
+					</li>
+				</ul>
+			</div>
+				
+		</div>
+
+        <!--end .main-->
+        <!--start .footer-->
+
+        <div class="footer">
+            <p>&copy;2016.12 Experienced Drivers v1.0<a href="#" target="_blank">翼灵物联工作室</a></p>
+        </div>
+
+        <!--end .footer-->
+		</div>
+
+
+</body>
+
+</html>
